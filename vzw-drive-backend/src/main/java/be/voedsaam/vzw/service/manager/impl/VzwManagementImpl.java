@@ -25,8 +25,11 @@ public class VzwManagementImpl implements VzwManagement {
 	@Override
 	public UserDTO login(UserDTO user) {
 		if (userRepository.exists(userMapper.mapToObj(user))) {
-			currentUser = userRepository.find(userMapper.mapToObj(user));
-			return userMapper.mapToDTO(currentUser);
+			User found = userRepository.find(userMapper.mapToObj(user));
+			
+			if ((found.getEmail().equals(user.getEmail())&&(found.getPassword().equals(user.getPassword()))))
+				currentUser = found;
+				return userMapper.mapToDTO(currentUser);
 		} else
 			return null;
 	}

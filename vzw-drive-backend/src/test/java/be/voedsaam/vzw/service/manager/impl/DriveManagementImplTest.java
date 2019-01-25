@@ -135,7 +135,7 @@ public class DriveManagementImplTest {
 		assertEquals("Voedsel Depot: Den azalee", destination2.getDestinationName());
 		
 		// add destination to existing drive drive 1 has 3 destinations 
-		drive1 =driveManagement.addDestination(drive1, destination3);
+		destination3 =driveManagement.addDestination(drive1, destination3);
 		
 		destination1 = ((List<DestinationDTO>) driveManagement.getDestinationsByDrive(drive1)).get(0);
 		destination2 = ((List<DestinationDTO>) driveManagement.getDestinationsByDrive(drive1)).get(1);
@@ -247,14 +247,18 @@ public class DriveManagementImplTest {
 		assertEquals(" there are 2 drives for destination1: ",2, driveManagement.getDrivesByDestination(destination1).size());
 		assertEquals(" there are  drives  for destination2: ",1, driveManagement.getDrivesByDestination(destination2).size());
 		assertEquals(" there are 1 drives for destination3: ",1, driveManagement.getDrivesByDestination(destination3).size());
-		driveManagement.addDestination(drive1, destination1);
-		driveManagement.addDestination(drive1, destination2);
-		driveManagement.addDestination(drive1, destination3);
-		List<DriveDTO> drives = (List<DriveDTO>) driveManagement.getDriveList(LocalDateTime.of(2019, 01, 01, 9, 30), LocalDateTime.of(2019, 01, 01, 10, 30));
+		destination1 = driveManagement.addDestination(drive1, destination1);
+		destination2 = driveManagement.addDestination(drive1, destination2);
+		destination3 = driveManagement.addDestination(drive1, destination3);
+		List<DriveDTO> drives = (List<DriveDTO>) driveManagement.getDriveList(LocalDateTime.of(2019, 01, 01, 0, 0), LocalDateTime.of(2019, 01, 01, 23, 30));
 		List<DestinationDTO> destinations = (List<DestinationDTO>) driveManagement.getDestinationsByDrive(drive1);
 		assertEquals(drives.size(), 1);
-		assertEquals(destinations.size(), 3);
-		
+		assertEquals("drive1 start time is not equal",LocalDateTime.of(2019, 01, 01, 9, 30), drives.get(0).getStartTime());
+		assertEquals("drive 1 end time is not equal",LocalDateTime.of(2019, 01, 01, 10, 30), drives.get(0).getEndTime());
+		assertEquals("drive 1 nr of destinations", destinations.size(), 3);
+		assertEquals("drive destination 1 ", destination1.getId(), destinations.get(0).getId());
+		assertEquals("drive destination 2 ", destination2.getId(), destinations.get(1).getId());
+		assertEquals("drive destination 3 ", destination3.getId(), destinations.get(2).getId());
 	}
 
 	@Test
@@ -327,8 +331,10 @@ public class DriveManagementImplTest {
 
 	@After
 	public void tearDown() throws Exception {
-		//userRepository.deleteAll(userRepository.getAll());
-		//driveRepository.deleteAll(driveRepository.getAll());
+		//userRepository.deleteAll(userRepository.getAll()); rollback exception
+		driveRepository.deleteAll(driveRepository.getAll());
+		userRepository.close();
+		driveRepository.close();
 	}
 
 }

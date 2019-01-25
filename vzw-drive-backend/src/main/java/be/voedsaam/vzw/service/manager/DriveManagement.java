@@ -19,7 +19,7 @@ public interface DriveManagement {
 	public Collection<DriveDTO> getDrivesByDestination(DestinationDTO destination);
 	public DriveDTO changeDrive(DriveDTO newDrive );
 	public DriveDTO addDrive(DriveDTO drive1, DestinationDTO start, DestinationDTO first);
-	public DriveDTO addDestination(DriveDTO drive1, DestinationDTO destination3);
+	public DestinationDTO addDestination(DriveDTO drive1, DestinationDTO destination3);
 	public Collection<DestinationDTO> getDestinationsByDrive(DriveDTO driveDTO);
 
 }

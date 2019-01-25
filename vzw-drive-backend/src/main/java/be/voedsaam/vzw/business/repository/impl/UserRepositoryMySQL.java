@@ -17,7 +17,7 @@ public class UserRepositoryMySQL implements UserRepository {
 	
 
 	public UserRepositoryMySQL() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("VZW_CVO");
+		entityManagerFactory = Persistence.createEntityManagerFactory("VZW_LOCAL");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 
@@ -41,8 +41,12 @@ public class UserRepositoryMySQL implements UserRepository {
 		if (exists(aggregate)) {
 
 			found = entityManager
-					.createQuery("select u from User u where u.email = :email and u.password = :password", User.class)
-					.setParameter("email", aggregate.getEmail()).setParameter("password", aggregate.getPassword())
+					.createQuery("select u from User u where u.email = :email and u.password = :password"
+							+ " or u.firstName= :firstName and u.lastName = :lastName", User.class)
+					.setParameter("email", aggregate.getEmail())
+					.setParameter("password", aggregate.getPassword())
+					.setParameter("firstName", aggregate.getFirstName())
+					.setParameter("lastName", aggregate.getLastName())
 					.getSingleResult();
 
 		}
@@ -118,8 +122,10 @@ public class UserRepositoryMySQL implements UserRepository {
 		Long count = (Long) entityManager
 				.createQuery("select count(u) from User u where u.email = :email and u.password = :password "
 						+ "or u.firstName= :firstName and u.lastName = :lastName")
-				.setParameter("email", aggregate.getEmail()).setParameter("password", aggregate.getPassword())
-				.setParameter("firstName", aggregate.getFirstName()).setParameter("lastName", aggregate.getLastName())
+				.setParameter("email", aggregate.getEmail())
+				.setParameter("password", aggregate.getPassword())
+				.setParameter("firstName", aggregate.getFirstName())
+				.setParameter("lastName", aggregate.getLastName())
 				.getSingleResult();
 		return ((count.equals(0L)) ? false : true);
 	}

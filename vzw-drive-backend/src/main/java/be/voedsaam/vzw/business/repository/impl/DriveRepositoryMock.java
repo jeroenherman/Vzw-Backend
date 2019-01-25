@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import be.voedsaam.vzw.business.Destination;
 import be.voedsaam.vzw.business.Drive;
 import be.voedsaam.vzw.business.repository.DriveRepository;
 
@@ -102,6 +103,18 @@ public class DriveRepositoryMock implements DriveRepository {
 	@Override
 	public void close() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Destination findDestinationById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Destination addDestination(Destination destination) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

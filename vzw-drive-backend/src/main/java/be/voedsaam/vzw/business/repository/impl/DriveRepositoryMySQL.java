@@ -19,7 +19,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	
 	public DriveRepositoryMySQL() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("VZW_CVO");
+		entityManagerFactory = Persistence.createEntityManagerFactory("VZW_LOCAL");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 	
@@ -28,13 +28,13 @@ public class DriveRepositoryMySQL implements DriveRepository {
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		entityTransaction.begin();
 		if(aggregate.getDriver()!=null)
-		entityManager.merge(aggregate.getDriver());
+		aggregate.setDriver(entityManager.merge(aggregate.getDriver()));
 		if(aggregate.getAttendee()!=null)
-		entityManager.merge(aggregate.getAttendee());
+		aggregate.setAttendee(entityManager.merge(aggregate.getAttendee()));
 		if(aggregate.getDepotHelp()!=null)
-		entityManager.merge(aggregate.getDepotHelp());		
+		aggregate.setDepotHelp(entityManager.merge(aggregate.getDepotHelp()));		
 		for (Destination destination : aggregate.getDestinations()) {
-			entityManager.merge(destination);
+			destination = findDestinationById(destination.getId());
 		}
 		aggregate = entityManager.merge(aggregate);
 		entityTransaction.commit();
@@ -44,13 +44,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public Drive update(Drive aggregate) {
-		entityManager.getTransaction().begin();
-		for (Destination destination : aggregate.getDestinations()) {
-			entityManager.merge(destination);
-		}
-		aggregate = entityManager.merge(aggregate);
-		entityManager.getTransaction().commit();
-		return aggregate;
+		return create(aggregate);
 	}
 
 	@Override
@@ -115,6 +109,22 @@ public class DriveRepositoryMySQL implements DriveRepository {
 	public void close() {	
 		entityManager.close();
 		entityManagerFactory.close();
+	}
+
+	@Override
+	public Destination findDestinationById(Long id) {
+		if(id !=null)
+		return entityManager.find(Destination.class, id);
+		return null;
+	}
+
+	@Override
+	public Destination addDestination(Destination destination) {
+		Destination found = findDestinationById(destination.getId());
+		if (found!=null)
+		return found;
+		return entityManager.merge(destination);
+		
 	}
 
 
