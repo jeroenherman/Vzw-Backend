@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="VZW_CVO">
+		 <properties>
+       		<property name="hibernate.archive.autodetection" value="class" />
+    
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://172.16.1.11:3306/HERMAN?serverTimezone=UTC" />
+			<property name="hibernate.connection.user" value="HERMAN" />
+			<property name="hibernate.connection.password" value="JEROEN" />
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+ 
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="use_sql_comments" value="true" />
+			
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="VZW_LOCAL">
+		 <properties>
+       		<property name="hibernate.archive.autodetection" value="class" />
+    
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/vzw?serverTimezone=UTC" />
+			<property name="hibernate.connection.user" value="root" />
+			<property name="hibernate.connection.password" value="Smokey4ever" />
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+ 
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="use_sql_comments" value="true" />
+			
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="VZW_AZURE">
+		 <properties>
+       		<property name="hibernate.archive.autodetection" value="class" />
+    
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+<!-- 			TODO create connection -->
+<!-- 			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" /> -->
+<!-- 			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/vzw?serverTimezone=UTC" /> -->
+<!-- 			<property name="hibernate.connection.user" value="root" /> -->
+<!-- 			<property name="hibernate.connection.password" value="Smokey4ever" /> -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+ 
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="use_sql_comments" value="true" />
+			
+		</properties>
+	</persistence-unit>
+</persistence>

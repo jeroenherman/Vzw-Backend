@@ -1,0 +1,68 @@
+package be.voedsaam.vzw.service.manager.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import be.voedsaam.vzw.business.User;
+import be.voedsaam.vzw.business.repository.UserRepository;
+import be.voedsaam.vzw.business.repository.impl.UserRepositoryMock;
+import be.voedsaam.vzw.business.repository.impl.UserRepositoryMySQL;
+import be.voedsaam.vzw.service.dto.UserDTO;
+import be.voedsaam.vzw.service.manager.VzwManagement;
+import be.voedsaam.vzw.service.mapper.UserMapper;
+
+public class VzwManagementImpl implements VzwManagement {
+	private User currentUser;
+	private UserMapper userMapper;
+	private UserRepository userRepository;
+	
+	public VzwManagementImpl(UserMapper userMapper, UserRepository userRepository) {
+		super();
+		this.userMapper = userMapper;
+		this.userRepository = userRepository;
+	}
+
+	@Override
+	public UserDTO login(UserDTO user) {
+		if (userRepository.exists(userMapper.mapToObj(user))) {
+			currentUser = userRepository.find(userMapper.mapToObj(user));
+			return userMapper.mapToDTO(currentUser);
+		} else
+			return null;
+	}
+
+	@Override
+	public UserDTO addUser(UserDTO user) {
+		User result = null;
+		if(userRepository.exists(userMapper.mapToObj(user))) 
+			result = userRepository.update(userMapper.mapToObj(user));
+		else
+			result = userRepository.create(userMapper.mapToObj(user));
+		return userMapper.mapToDTO(result);
+	}
+
+	@Override
+	public boolean logOut() {
+		currentUser = null;
+		return true;
+	}
+
+	@Override
+	public boolean removeUser(UserDTO user) {
+		return userRepository.delete(userMapper.mapToObj(user));
+	}
+
+	@Override
+	public List<UserDTO> getAllUsers() {
+		
+		return userMapper.mapToDTO(userRepository.getAll());
+	}
+
+	@Override
+	public UserDTO getCurrentUser() {
+		
+		return userMapper.mapToDTO(currentUser);
+	}
+
+	
+}
