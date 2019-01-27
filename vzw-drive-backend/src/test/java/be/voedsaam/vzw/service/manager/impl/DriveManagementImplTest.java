@@ -13,13 +13,13 @@ import org.junit.Test;
 
 import be.voedsaam.vzw.business.repository.DriveRepository;
 import be.voedsaam.vzw.business.repository.UserRepository;
-import be.voedsaam.vzw.business.repository.impl.DriveRepositoryMock;
 import be.voedsaam.vzw.business.repository.impl.DriveRepositoryMySQL;
-import be.voedsaam.vzw.business.repository.impl.UserRepositoryMock;
 import be.voedsaam.vzw.business.repository.impl.UserRepositoryMySQL;
 import be.voedsaam.vzw.commons.Role;
+import be.voedsaam.vzw.service.dto.AgreementDTO;
 import be.voedsaam.vzw.service.dto.DestinationDTO;
 import be.voedsaam.vzw.service.dto.DriveDTO;
+import be.voedsaam.vzw.service.dto.TaskDTO;
 import be.voedsaam.vzw.service.dto.UserDTO;
 import be.voedsaam.vzw.service.manager.DriveManagement;
 import be.voedsaam.vzw.service.manager.VzwManagement;
@@ -105,7 +105,7 @@ public class DriveManagementImplTest {
 		assertEquals(null,drive2.getId());
 		drive2 = driveManagement.addDrive(drive2);
 		assertTrue(drive2.getId()!=null);
-		
+	
 		
 		assertEquals("drivemanagement must contain 2 drives  ",2, driveManagement.getDriveList(LocalDateTime.MIN, LocalDateTime.MAX).size());
 		assertEquals("driver must have 2 drives User is  created", driveManagement.getDrivesByDriver(driver).size(),2,0);
@@ -282,6 +282,60 @@ public class DriveManagementImplTest {
 		
 	}
 	
+	@Test 
+	public void testAgreements() throws Exception {
+		destination3 = driveManagement.addDestination(destination3);
+		assertTrue(destination3.getId()!=null);
+		AgreementDTO a1 = new AgreementDTO();
+		a1.setAgreement("afspraak om 6u aan het depot");
+		AgreementDTO a2 = new AgreementDTO();
+		a2.setAgreement("Ophaal sleutel camionette + hek: in de sleutelkluis op de afgesproken plaats, code krijg je per sms, de avond voor de rit");
+		a1 = driveManagement.addAgreement(destination3, a1);
+		assertTrue(a1.getId()==1);
+		a2 = driveManagement.addAgreement(destination3, a2);
+		assertTrue(a2.getId()==2);
+		List<AgreementDTO> agreements = driveManagement.getAgreements(destination3);
+		assertEquals(a1, agreements.get(0));
+		assertEquals(a2, agreements.get(1));
+		//assertTrue(DriveManagement.removeAgreement(destination3, a1));
+		//List<AgreementDTO> agreements = driveManagement.getAgreements(destination3);
+		//assertEquals(a2, agreements.get(0));
+		
+	}
+	
+	@Test 
+	public void testTasks() throws Exception {
+		destination3 = driveManagement.addDestination(destination3);
+		assertTrue(destination3.getId()!=null);
+		TaskDTO t1 = new TaskDTO();
+		t1.setTitle("Ophaling");
+		t1.setDiscription("Ophaal groenten op veiling");
+		t1.setRole(Role.DRIVER);
+
+		
+		TaskDTO t2 = new TaskDTO();
+		t2.setTitle("Toegangspasjes en ritplanning voor veiling");
+		t2.setDiscription("Bevinden zich in het rood kaft in de camionette.Gelieve te xchecken voor vertrek of deze aanwezig zijn");
+		t2.setRole(Role.ATTENDEE);
+		
+		TaskDTO t3 = new TaskDTO();
+		t3.setTitle("Klaarzetten voor ophaling  ");
+		t3.setDiscription("20 grijze bakken moeten worden voorzien.");
+		t3.setRole(Role.DEPOTHELP);
+		
+		t1 = driveManagement.addTask(destination3,t1);
+		t2 = driveManagement.addTask(destination3,t2);
+		t3 = driveManagement.addTask(destination3,t3);
+		
+		List<TaskDTO> tasks = driveManagement.getTasks(destination3);
+		
+		assertEquals (t1,tasks.get(0));
+		assertEquals (t2,tasks.get(1));
+		assertEquals (t3,tasks.get(2));
+	}
+	
+	
+	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -332,9 +386,9 @@ public class DriveManagementImplTest {
 	@After
 	public void tearDown() throws Exception {
 		//userRepository.deleteAll(userRepository.getAll()); rollback exception
-		driveRepository.deleteAll(driveRepository.getAll());
-		userRepository.close();
-		driveRepository.close();
+//		driveRepository.deleteAll(driveRepository.getAll());
+//		userRepository.close();
+//		driveRepository.close();
 	}
 
 }

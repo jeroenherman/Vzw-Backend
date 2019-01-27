@@ -8,15 +8,19 @@ import java.util.stream.Collectors;
 
 import be.voedsaam.vzw.business.Destination;
 import be.voedsaam.vzw.business.Drive;
+import be.voedsaam.vzw.business.Task;
 import be.voedsaam.vzw.business.User;
 import be.voedsaam.vzw.business.repository.DriveRepository;
 import be.voedsaam.vzw.business.repository.UserRepository;
+import be.voedsaam.vzw.service.dto.AgreementDTO;
 import be.voedsaam.vzw.service.dto.DestinationDTO;
 import be.voedsaam.vzw.service.dto.DriveDTO;
+import be.voedsaam.vzw.service.dto.TaskDTO;
 import be.voedsaam.vzw.service.dto.UserDTO;
 import be.voedsaam.vzw.service.manager.DriveManagement;
 import be.voedsaam.vzw.service.mapper.DestinationMapper;
 import be.voedsaam.vzw.service.mapper.DriveMapper;
+import be.voedsaam.vzw.service.mapper.TaskMapper;
 import be.voedsaam.vzw.service.mapper.UserMapper;
 
 public class DriveManagementImpl implements DriveManagement {
@@ -27,6 +31,7 @@ public class DriveManagementImpl implements DriveManagement {
 	private UserMapper userMapper;
 	private DestinationMapper destinationMapper;
 	private UserRepository userRepository;
+	private TaskMapper taskMapper;
 
 	public DriveManagementImpl(DriveRepository driveRepository, DriveMapper driveMapper, UserMapper userMapper,
 			DestinationMapper destinationMapper, UserRepository userRepository) {
@@ -36,6 +41,7 @@ public class DriveManagementImpl implements DriveManagement {
 		this.userMapper = userMapper;
 		this.destinationMapper = destinationMapper;
 		this.userRepository = userRepository;
+		this.taskMapper = new TaskMapper();
 	}
 
 	@Override
@@ -63,34 +69,24 @@ public class DriveManagementImpl implements DriveManagement {
 
 	@Override
 	public Collection<DriveDTO> getDrivesByDriver(UserDTO user) {
-		// return
-		// driveMapper.mapToDTO(driveRepository.getAllWithDriver(userMapper.mapToObj(user)));
-
 		return driveMapper.mapToDTO(driveRepository.getAll().stream().filter(d -> d.getDriver() != null)
 				.filter(d -> d.getDriver().equals(userMapper.mapToObj(user))).collect(Collectors.toList()));
 	}
 
 	@Override
 	public Collection<DriveDTO> getDrivesByAttendee(UserDTO user) {
-		// return
-		// driveMapper.mapToDTO(driveRepository.getAllWithAttendee(userMapper.mapToObj(user)));
-
 		return driveMapper.mapToDTO(driveRepository.getAll().stream().filter(d -> d.getAttendee() != null)
 				.filter(d -> d.getAttendee().equals(userMapper.mapToObj(user))).collect(Collectors.toList()));
 	}
 
 	@Override
 	public Collection<DriveDTO> getDrivesByDepotHelp(UserDTO user) {
-		// return
-		// driveMapper.mapToDTO(driveRepository.getAllWithDepotHelp(userMapper.mapToObj(user)));
 		return driveMapper.mapToDTO(driveRepository.getAll().stream().filter(d -> d.getDepotHelp() != null)
 				.filter(d -> d.getDepotHelp().equals(userMapper.mapToObj(user))).collect(Collectors.toList()));
 	}
 
 	@Override
 	public Collection<DriveDTO> getDrivesByDestination(DestinationDTO destination) {
-		// return
-		// driveMapper.mapToDTO(driveRepository.getAllWithDestination(destinationMapper.mapToObj(destination)));
 		return driveMapper.mapToDTO(driveRepository.getAll().stream().filter(d -> d.getDestinations() != null)
 				.filter(d -> d.getDestinations().contains(destinationMapper.mapToObj(destination)))
 				.collect(Collectors.toList()));
@@ -140,5 +136,63 @@ public class DriveManagementImpl implements DriveManagement {
 
 		return destinationMapper.mapToDTO(results);
 	}
+
+	@Override
+	public AgreementDTO addAgreement(DestinationDTO destinationDTO, AgreementDTO agreementDTO) {
+		Destination destination = driveRepository.findDestinationById(destinationDTO.getId());
+		destination.getAgreements().add(agreementDTO.getAgreement());
+		destination = driveRepository.addDestination(destination);
+		agreementDTO.setId((long) destination.getAgreements().size());
+		return agreementDTO;
+	}
+
+	@Override
+	public List<AgreementDTO> getAgreements(DestinationDTO destinationDTO) {
+		Long counter = (long)1;
+		Destination destination = driveRepository.findDestinationById(destinationDTO.getId());
+		List<AgreementDTO> agreements = new ArrayList<AgreementDTO>();
+		List<String> strings = (List<String>) destination.getAgreements();
+		for (String string : strings) {
+			AgreementDTO a = new AgreementDTO();
+			a.setId(counter);
+			a.setAgreement(string);
+			agreements.add(a);
+			counter++;
+		}
+	
+		return agreements;
+	}
+
+	@Override
+	public TaskDTO addTask(DestinationDTO destinationDTO, TaskDTO taskDTO) {
+		List<TaskDTO> tasks = getTasks(destinationDTO);
+		if (tasks.contains(taskDTO))
+			return taskDTO;
+		tasks.add(taskDTO);
+		Destination destination = driveRepository.findDestinationById(destinationDTO.getId());
+		destination.setTasks(taskMapper.mapToObj(tasks));
+		destination = driveRepository.addDestination(destination);
+		for (Task task : destination.getTasks()) {
+			if (task.getDiscription().equals(taskDTO.getDiscription())&& task.getTitle().contentEquals(taskDTO.getTitle()))
+				taskDTO = taskMapper.mapToDTO(task);
+		}
+			
+		return taskDTO;
+	
+	}
+
+	@Override
+	public List<TaskDTO> getTasks(DestinationDTO detinationDTO) {
+	
+		return taskMapper.mapToDTO((List<Task>)driveRepository.findDestinationById(detinationDTO.getId()).getTasks());
+	}
+
+	@Override
+	public DestinationDTO addDestination(DestinationDTO destinationDTO) {
+		Destination destination = destinationMapper.mapToObj(destinationDTO);	
+		return destinationMapper.mapToDTO(driveRepository.addDestination(destination));
+	}
+
+	
 
 }

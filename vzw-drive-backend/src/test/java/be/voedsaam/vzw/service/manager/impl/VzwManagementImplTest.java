@@ -72,8 +72,8 @@ public class VzwManagementImplTest {
 
 	@After
 	public void tearDown() throws Exception {
-		userRepository.deleteAll(userRepository.getAll());
-		userRepository.close();	
+		//userRepository.deleteAll(userRepository.getAll());
+		//userRepository.close();	
 	}
 
 	@Test
