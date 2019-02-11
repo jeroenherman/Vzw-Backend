@@ -173,7 +173,7 @@ public class DriveManagementImpl implements DriveManagement {
 		destination.setTasks(taskMapper.mapToObj(tasks));
 		destination = driveRepository.addDestination(destination);
 		for (Task task : destination.getTasks()) {
-			if (task.getDiscription().equals(taskDTO.getDiscription())&& task.getTitle().contentEquals(taskDTO.getTitle()))
+			if (task.getDiscription().equals(taskDTO.getDescription())&& task.getTitle().contentEquals(taskDTO.getTitle()))
 				taskDTO = taskMapper.mapToDTO(task);
 		}
 			

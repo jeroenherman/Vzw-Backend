@@ -11,8 +11,8 @@ import org.hibernate.mapping.DependantValue;
 
 import be.voedsaam.vzw.business.Address;
 import be.voedsaam.vzw.business.User;
-import be.voedsaam.vzw.business.repository.impl.DriveRepositoryMock;
-import be.voedsaam.vzw.business.repository.impl.UserRepositoryMock;
+import be.voedsaam.vzw.business.repository.impl.mock.DriveRepositoryMock;
+import be.voedsaam.vzw.business.repository.impl.mock.UserRepositoryMock;
 import be.voedsaam.vzw.commons.Color;
 import be.voedsaam.vzw.commons.Role;
 import be.voedsaam.vzw.service.dto.DestinationDTO;

@@ -1,4 +1,4 @@
-package be.voedsaam.vzw.business.repository.impl;
+package be.voedsaam.vzw.business.repository.impl.mock;
 
 import java.util.ArrayList;
 import java.util.Collection;

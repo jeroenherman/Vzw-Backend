@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import be.voedsaam.vzw.business.repository.DriveRepository;
 import be.voedsaam.vzw.business.repository.UserRepository;
-import be.voedsaam.vzw.business.repository.impl.DriveRepositoryMySQL;
-import be.voedsaam.vzw.business.repository.impl.UserRepositoryMySQL;
+import be.voedsaam.vzw.business.repository.impl.mysql.DriveRepositoryMySQL;
+import be.voedsaam.vzw.business.repository.impl.mysql.UserRepositoryMySQL;
 import be.voedsaam.vzw.commons.Role;
 import be.voedsaam.vzw.service.dto.AgreementDTO;
 import be.voedsaam.vzw.service.dto.DestinationDTO;
@@ -309,18 +309,18 @@ public class DriveManagementImplTest {
 		assertTrue(destination3.getId()!=null);
 		TaskDTO t1 = new TaskDTO();
 		t1.setTitle("Ophaling");
-		t1.setDiscription("Ophaal groenten op veiling");
+		t1.setDescription("Ophaal groenten op veiling");
 		t1.setRole(Role.DRIVER);
 
 		
 		TaskDTO t2 = new TaskDTO();
 		t2.setTitle("Toegangspasjes en ritplanning voor veiling");
-		t2.setDiscription("Bevinden zich in het rood kaft in de camionette.Gelieve te xchecken voor vertrek of deze aanwezig zijn");
+		t2.setDescription("Bevinden zich in het rood kaft in de camionette.Gelieve te xchecken voor vertrek of deze aanwezig zijn");
 		t2.setRole(Role.ATTENDEE);
 		
 		TaskDTO t3 = new TaskDTO();
 		t3.setTitle("Klaarzetten voor ophaling  ");
-		t3.setDiscription("20 grijze bakken moeten worden voorzien.");
+		t3.setDescription("20 grijze bakken moeten worden voorzien.");
 		t3.setRole(Role.DEPOTHELP);
 		
 		t1 = driveManagement.addTask(destination3,t1);
@@ -375,7 +375,7 @@ public class DriveManagementImplTest {
 		attendee.setRole(Role.ATTENDEE);
 		
 
-		depotHelp = new UserDTO("Marie-Noëlle Delarbre");
+		depotHelp = new UserDTO("Marie-Noï¿½lle Delarbre");
 		depotHelp.setTel("0474 84 75 91");
 		depotHelp.setRole(Role.DEPOTHELP);
 		

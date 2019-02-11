@@ -1,30 +1,26 @@
-package be.voedsaam.vzw.business.repository.impl;
+package be.voedsaam.vzw.business.repository.impl.mysql;
 
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import be.voedsaam.vzw.business.Destination;
 import be.voedsaam.vzw.business.Drive;
 import be.voedsaam.vzw.business.repository.DriveRepository;
-
-public class DriveRepositoryMySQL implements DriveRepository {
+import be.voedsaam.vzw.business.repository.impl.AbstractJpaDaoService;
+@Service
+@Profile("mysql")
+public class DriveRepositoryMySQL extends AbstractJpaDaoService implements DriveRepository {
 	
-	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
-
-	
-	public DriveRepositoryMySQL() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("VZW_LOCAL");
-		entityManager = entityManagerFactory.createEntityManager();
-	}
 	
 	@Override
 	public Drive create(Drive aggregate) {
+		EntityManager entityManager = emf.createEntityManager();
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		entityTransaction.begin();
 		if(aggregate.getDriver()!=null)
@@ -49,6 +45,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public boolean delete(Drive aggregate) {
+		EntityManager entityManager = emf.createEntityManager();
 		Drive drive = find(aggregate);
 		entityManager.getTransaction().begin();
 		entityManager.remove(drive);
@@ -58,6 +55,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public boolean createAll(Collection<Drive> aggregates) {
+		EntityManager entityManager = emf.createEntityManager();
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		entityTransaction.begin();
 		entityManager.persist(aggregates);
@@ -69,6 +67,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public List<Drive> getAll() {
+		EntityManager entityManager = emf.createEntityManager();
 		return entityManager.createQuery("select d from Drive d", Drive.class).getResultList();
 	}
 
@@ -86,6 +85,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public Drive getByID(Long id) {
+		EntityManager entityManager = emf.createEntityManager();
 		return entityManager.find(Drive.class, id);
 	}
 
@@ -106,13 +106,15 @@ public class DriveRepositoryMySQL implements DriveRepository {
 	}
 
 	@Override
-	public void close() {	
+	public void close() {
+		EntityManager entityManager = emf.createEntityManager();
 		entityManager.close();
-		entityManagerFactory.close();
+		emf.close();
 	}
 
 	@Override
 	public Destination findDestinationById(Long id) {
+		EntityManager entityManager = emf.createEntityManager();
 		if(id !=null)
 		return entityManager.find(Destination.class, id);
 		return null;
@@ -120,6 +122,7 @@ public class DriveRepositoryMySQL implements DriveRepository {
 
 	@Override
 	public Destination addDestination(Destination destination) {
+		EntityManager entityManager = emf.createEntityManager();
 		Destination found = findDestinationById(destination.getId());
 		if (found!=null)
 		return found;

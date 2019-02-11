@@ -5,8 +5,8 @@ import java.util.List;
 
 import be.voedsaam.vzw.business.User;
 import be.voedsaam.vzw.business.repository.UserRepository;
-import be.voedsaam.vzw.business.repository.impl.UserRepositoryMock;
-import be.voedsaam.vzw.business.repository.impl.UserRepositoryMySQL;
+import be.voedsaam.vzw.business.repository.impl.mock.UserRepositoryMock;
+import be.voedsaam.vzw.business.repository.impl.mysql.UserRepositoryMySQL;
 import be.voedsaam.vzw.service.dto.UserDTO;
 import be.voedsaam.vzw.service.manager.VzwManagement;
 import be.voedsaam.vzw.service.mapper.UserMapper;

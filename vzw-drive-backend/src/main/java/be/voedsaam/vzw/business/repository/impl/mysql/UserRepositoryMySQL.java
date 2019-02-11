@@ -1,4 +1,4 @@
-package be.voedsaam.vzw.business.repository.impl;
+package be.voedsaam.vzw.business.repository.impl.mysql;
 
 import java.util.Collection;
 import java.util.List;
